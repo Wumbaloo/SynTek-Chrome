@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<meta charset="utf-8">
+<link rel="stylesheet" href="new_tab.css"/>
+<title>New Tab</title>
+
+<body id="body">
+        <div class="centered">
+            <div id="time"></div>
+            <div class="welcome" hidden>Please wait...</div>
+            <div class="col-autologin" hidden>
+                <input id="autologin" class="autologin-effect" type="text" placeholder="Enter your autologin link...">
+                <span class="focus-border">
+                <i></i>
+              </span>
+            </div>
+            <p class="autologin_help" hidden>If you're logged at intra.epitech.eu, please click below</p>
+            <button id="autologin_get" hidden>Retrieve my autologin link</button>
+        </div>
+        <div id="events" hidden>
+            <table id="table_events">
+                <thead>
+                    <div class="title">Upcoming</div>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <img id="pexel_logo" src="../images/pexels-logo.png" title="Photos provided by Pexels" alt="Photos provided by Pexels"/>
+        <script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+        <script src="../sync.js"></script>
+        <script src="new_tab.js"></script>
+    </body>
+
+</html>

@@ -1,0 +1,159 @@
+html, body {
+    background-size: contain;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    overflow: hidden;
+}
+
+.centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    position: absolute;
+    width: 100%;
+    font-family: "Nimbus Sans", sans-serif;
+    font-size: 126px;
+    font-weight: 700;
+    color: #FFFFFF;
+    text-shadow: 2px 2px black;
+}
+
+.welcome {
+    font-family: "Nimbus Sans", sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+#pexel_logo {
+    cursor: pointer;
+    position: absolute;
+    transform: scale(0.2);
+    top: 88%;
+    left: 74.7%;
+}
+
+#events {
+    position: absolute;
+    left: 2%;
+    top: 5%;
+    width: 25%;
+    background-color: rgba(0, 167, 228, 0.3);
+    border-radius: 10px 10px 5px 5px;
+    color: #FFFFFF;
+}
+
+.title {
+    background-color: rgba(0, 167, 228, 1);
+    border-radius: 10px 10px 0 0;
+    line-height: 150%;
+    text-align: center;
+}
+
+.module {
+    cursor: pointer;
+}
+
+tr {
+
+}
+tr:nth-child(even) {
+    background-color: rgba(0, 167, 228, 0.3);
+    color: #FFFFFF;
+}
+
+.col-autologin {
+    top: -50px;
+    margin: 40px 3%;
+    width: 40%;
+    height: 60px;
+    border-radius: 10px;
+    position: relative;
+}
+
+#autologin {
+    font: 40px "Nimbus Sans", "Lato", Arial, sans-serif;
+    color: #FFFFFF;
+    width: 100%;
+    height: 60px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    letter-spacing: 1px;
+    position: absolute;
+    padding-top: 10px;
+    transform: translateX(-50%);
+    background: rgba(51, 51, 51, 0.7);
+}
+
+.autologin-effect {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 7px 14px 9px;
+    transition: 0.4s;
+}
+
+.autologin-effect ~ .focus-border:before,
+.autologin-effect ~ .focus-border:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #2E3261;
+    transition: 0.3s;
+}
+.autologin-effect ~ .focus-border:after {
+    top: auto;
+    bottom: 0;
+    left: auto;
+    right: 0;
+}
+.autologin-effect ~ .focus-border i:before,
+.autologin-effect ~ .focus-border i:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 0;
+    background-color: #2E3261;
+    transition: 0.4s;
+}
+.autologin-effect ~ .focus-border i:after {
+    left: auto;
+    right: 0;
+    top: auto;
+    bottom: 0;
+}
+.autologin-effect:focus ~ .focus-border:before,
+.autologin-effect:focus ~ .focus-border:after {
+    width: 100%;
+    transition: 0.3s;
+}
+.autologin-effect:focus ~ .focus-border i:before,
+.autologin-effect:focus ~ .focus-border i:after {
+    height: 100%;
+    transition: 0.4s;
+}
+
+#autologin_get {
+    width: 20%;
+    height: 50px;
+    position: relative;
+    bottom: 50px;
+    border-radius: 20px;
+}
+
+.autologin_help {
+    font-size: 20px;
+    font-weight: 100;
+    position: absolute;
+    margin-top: 50px;
+}
