@@ -3,34 +3,34 @@ function update_photo()
     let request = new XMLHttpRequest();
     let photo_url;
 
-    // request.open("GET","https://api.pexels.com/v1/search?query=code+query&per_page=50&page=1",true);
-    // request.setRequestHeader("Authorization", "Bearer 563492ad6f91700001000001d0c29fc4d08b486e97db01e7a9aaa47d");
-    // try {
-    //     request.send(null);
-    //     request.onreadystatechange = function() {
-    //         if (request.readyState === 4) {
-    //             if (!request.responseText) {
-    //                 photo_url = get_random_photos_offline();
-    //                 document.body.style.backgroundSize = "100%";
-    //                 document.body.style.backgroundImage = "url(" + photo_url + ")";
-    //                 return;
-    //             }
-    //             let photos = JSON.parse(request.responseText)["photos"];
-    //             let photo;
-    //             if (photos) {
-    //                 photo = photos[Math.floor(Math.random() * photos.length)];
-    //                 photo_url = get_photo_url(photo);
-    //             } else
-    //                 photo_url = get_random_photos_offline();
-    //             document.body.style.backgroundSize = "100%";
-    //             document.body.style.backgroundImage = "url(" + photo_url + ")";
-    //         }
-    //     };
-    // } catch (exception) {
+    request.open("GET","https://api.pexels.com/v1/search?query=code+query&per_page=50&page=1",true);
+    request.setRequestHeader("Authorization", "Bearer 563492ad6f91700001000001d0c29fc4d08b486e97db01e7a9aaa47d");
+    try {
+        request.send(null);
+        request.onreadystatechange = function() {
+            if (request.readyState === 4) {
+                if (!request.responseText) {
+                    photo_url = get_random_photos_offline();
+                    document.body.style.backgroundSize = "100%";
+                    document.body.style.backgroundImage = "url(" + photo_url + ")";
+                    return;
+                }
+                let photos = JSON.parse(request.responseText)["photos"];
+                let photo;
+                if (photos) {
+                    photo = photos[Math.floor(Math.random() * photos.length)];
+                    photo_url = get_photo_url(photo);
+                } else
+                    photo_url = get_random_photos_offline();
+                document.body.style.backgroundSize = "100%";
+                document.body.style.backgroundImage = "url(" + photo_url + ")";
+            }
+        };
+    } catch (exception) {
         photo_url = get_random_photos_offline();
         document.body.style.backgroundSize = "100%";
         document.body.style.backgroundImage = "url(" + photo_url + ")";
-    // }
+    }
 }
 
 function get_random_photos_offline()
