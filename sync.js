@@ -72,19 +72,22 @@ function get_next_registered(planning, days)
         let module_date = module.split(" ")[0].split("-");
         let module_time = module.split(" ")[1].split(":");
         if (parseInt(module_date[1]) === date.getMonth() + 2) {
-            let new_date = new Date();
-            new_date.setMonth(date.getMonth() + 1);
-            new_date.setDate(1);
             if (days) {
-                if (parseInt(module_date[2]) < new_date.getDate() + days)
+                let days_month = days_in_month(date.getMonth(), date.getFullYear());
+                if ((days_month - date.getDate()) + parseInt(module_date[2]) <= days)
                     comming[index++] = planning[i];
             } else
                 comming[index++] = planning[i];
-        } else if (parseInt(module_date[2]) >= date.getDate() && parseInt(module_time[0]) <= date.getTime()) {
-            if (!days)
-                comming[index++] = planning[i];
-            if (parseInt(module_date[2]) - days <= date.getDate())
-                comming[index++] = planning[i];
+        } else if (parseInt(module_date[2]) >= date.getDate()) {
+            if (parseInt(module_date[2]) === date.getDate()) {
+                if (parseInt(module_time[0]) > date.getHours())
+                    comming[index++] = planning[i];
+            } else {
+                if (!days)
+                    comming[index++] = planning[i];
+                if (parseInt(module_date[2]) - days <= date.getDate())
+                    comming[index++] = planning[i];
+            }
         }
     }
     return (comming);
@@ -106,7 +109,7 @@ function time_of_module(module)
     let days = parseInt(module_date[2]) - date.getDate();
     if (parseInt(module_date[1]) === date.getMonth() + 2) {
         let days_month = days_in_month(date.getMonth(), date.getFullYear());
-        days = (date.getDate() - days_month) + parseInt(module_date[2]);
+        days = (days_month - date.getDate()) + parseInt(module_date[2]);
     }
     if (days === 0) {
         end_string += "Today from ";
