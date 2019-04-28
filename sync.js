@@ -82,6 +82,10 @@ function get_next_registered(planning, days)
             if (parseInt(module_date[2]) === date.getDate()) {
                 if (parseInt(module_time[0]) > date.getHours())
                     comming[index++] = planning[i];
+                else if (parseInt(module_time[0]) === date.getHours()) {
+                    if (parseInt(module_time[1]) >= date.getMinutes())
+                        comming[index++] = planning[i];
+                }
             } else {
                 if (!days)
                     comming[index++] = planning[i];
@@ -95,6 +99,8 @@ function get_next_registered(planning, days)
 
 function format_room_code(room_code)
 {
+    if (!room_code)
+        return ("No room assigned");
     let splitted = room_code.split("/");
     return (splitted[splitted.length - 1]);
 }
