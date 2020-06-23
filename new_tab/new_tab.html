@@ -6,31 +6,65 @@
 <title>New Tab</title>
 
 <body id="body">
-        <div class="centered">
-            <div id="time"></div>
-            <div class="welcome" hidden>Please wait...</div>
-            <div class="col-autologin" hidden>
-                <input id="autologin" class="autologin-effect" type="text" placeholder="Enter your autologin link...">
-                <span class="focus-border">
-                <i></i>
-              </span>
+    <div class="drawer" style="width: 0">
+        <div class="container">
+            <div class="toggler">&#x2716;</div>
+            <h4 style="text-align: center;">Background</h4>
+            <button class="refreshPicture mdl-button mdl-button-color-1">Pick a new background</button>
+            <button class="keepBackground mdl-button mdl-button-color-1">Keep this background</button>
+            <button class="clearBackground mdl-button mdl-button-color-1">Clear background</button>
+            <h4 style="text-align: center;">Notifications</h4>
+            <span>Notify me <span><strong id="beforeTimer-text">15</strong></span> minutes before an event:</span>
+            <div class="beforeTimer-container">
+                <input type="range" min="2" max="30" value="15" class="slider" id="beforeTimer">
             </div>
-            <p class="autologin_help" hidden>If you're logged at intra.epitech.eu, please click below</p>
-            <button id="autologin_get" hidden>Retrieve my autologin link</button>
+            <h4 style="text-align: center;">Other</h4>
+            <div style="display: flex;">
+                <input type="checkbox" id="openEventNewTab" name="openEventNewTab" value="openEventNewTab" style="margin-right: 8px;">
+                <label for="openEventNewTab">Open event in a new tab</label><br>
+            </div>
+            <div style="display: flex;">
+                <input type="checkbox" id="openSearchNewTab" name="openSearchNewTab" value="openSearchNewTab" style="margin-right: 8px;">
+                <label for="openSearchNewTab">Open search-box in a new tab</label><br>
+            </div>
+            <button class="toggler bottom-settings-close mdl-button mdl-button-color-2">Close</button>
         </div>
-        <div id="events" hidden>
-            <table id="table_events">
-                <thead>
-                    <div class="title">Upcoming</div>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+    </div>
+    <div class="settings">
+        <div class="gotoIntra">Go to intra.epitech.eu</div>
+        <div class="toggler">Settings</div>
+    </div>
+    <div class="centered">
+        <div id="time" hidden></div>
+        <div class="welcome" hidden>Please wait...</div>
+        <div class="searchbox-container" hidden>
+            <div class="searchbox">
+                <input class="search-input" type="text" placeholder="Let's make a Google search or paste an URL!">
+                <div class="search-go">
+                    <img src="../icons/search.svg">
+                </div>
+            </div>
         </div>
-        <img id="pexel_logo" src="../images/pexels-logo.png" title="Photos provided by Pexels" alt="Photos provided by Pexels"/>
-        <script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
-        <script src="../sync.js"></script>
-        <script src="new_tab.js"></script>
-    </body>
+        <div class="col-autologin" hidden>
+            <input id="autologin" class="autologin-effect" type="text" placeholder="Enter your autologin link...">
+            <p class="autologin_help">If you're logged at intra.epitech.eu, please click below</p>
+            <button id="autologin_get" class="mdl-button mdl-button-color-1">Retrieve my autologin link</button>
+        </div>
+    </div>
+    <div id="events" hidden>
+        <table id="table_events">
+            <thead>
+                <div class="title">Upcoming</div>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <img id="pexel_logo" src="../images/pexels-logo.png" title="Photos provided by Pexels" alt="Photos provided by Pexels"/>
+    <script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+    <script src="../sync.js"></script>
+    <script src="new_tab.js"></script>
+    <script src="settings.js"></script>
+</body>
 
 </html>

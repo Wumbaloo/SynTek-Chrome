@@ -1,46 +1,11 @@
-function update_photo()
-{
-    let request = new XMLHttpRequest();
-    let photo_url;
-
-    request.open("GET","https://api.pexels.com/v1/search?query=code+query&per_page=50&page=1",true);
-    request.setRequestHeader("Authorization", "Bearer 563492ad6f91700001000001d0c29fc4d08b486e97db01e7a9aaa47d");
-    try {
-        request.send(null);
-        request.onreadystatechange = function() {
-            if (request.readyState === 4) {
-                if (!request.responseText) {
-                    photo_url = get_random_photos_offline();
-                    document.body.style.backgroundSize = "100%";
-                    document.body.style.backgroundImage = "url(" + photo_url + ")";
-                    return;
-                }
-                let photos = JSON.parse(request.responseText)["photos"];
-                let photo;
-                if (photos) {
-                    photo = photos[Math.floor(Math.random() * photos.length)];
-                    photo_url = get_photo_url(photo);
-                } else
-                    photo_url = get_random_photos_offline();
-                document.body.style.backgroundSize = "100%";
-                document.body.style.backgroundImage = "url(" + photo_url + ")";
-            }
-        };
-    } catch (exception) {
-        photo_url = get_random_photos_offline();
-        document.body.style.backgroundSize = "100%";
-        document.body.style.backgroundImage = "url(" + photo_url + ")";
-    }
-}
-
-function get_random_photos_offline()
+function getRandomOfflineBackground()
 {
     let photo = "../images/" + (1 + Math.floor(Math.random() * 10)) + ".jpg";
 
     return (photo);
 }
 
-function get_photo_url(photo)
+function getPhotoURL(photo)
 {
     let url = photo["src"]["original"];
 
@@ -48,17 +13,55 @@ function get_photo_url(photo)
     return (url);
 }
 
-function start_clock() {
+function updateBackground()
+{
+    let request = new XMLHttpRequest();
+    let photo_url;
+
+    chrome.storage.sync.get("background", (res) => {
+        if (res.background) {
+            document.body.style.backgroundImage = res.background;
+        } else {
+            request.open("GET","https://api.pexels.com/v1/search?query=code+query&per_page=50&page=1",true);
+            request.setRequestHeader("Authorization", "Bearer 563492ad6f91700001000001d0c29fc4d08b486e97db01e7a9aaa47d");
+            try {
+                request.send(null);
+                request.onreadystatechange = function() {
+                    if (request.readyState === 4) {
+                        if (!request.responseText) {
+                            photo_url = getRandomOfflineBackground();
+                            document.body.style.backgroundImage = "url(" + photo_url + ")";
+                            return;
+                        }
+                        let photos = JSON.parse(request.responseText)["photos"];
+                        let photo;
+                        if (photos) {
+                            photo = photos[Math.floor(Math.random() * photos.length)];
+                            photo_url = getPhotoURL(photo);
+                        } else
+                            photo_url = getRandomOfflineBackground();
+                        document.body.style.backgroundImage = "url(" + photo_url + ")";
+                    }
+                };
+            } catch (exception) {
+                photo_url = getRandomOfflineBackground();
+                document.body.style.backgroundImage = "url(" + photo_url + ")";
+            }
+        }
+    });
+}
+
+function startClock() {
     let today = new Date();
     let hours = today.getHours();
     let minutes = today.getMinutes();
     hours = (hours < 10) ? '0' + hours : hours;
     minutes = (minutes < 10) ? '0' + minutes : minutes;
     document.getElementById('time').innerHTML = hours + ":" + minutes;
-    setTimeout(start_clock, 10 * 1000);
+    setTimeout(startClock, 10 * 1000);
 }
 
-function update_username(username)
+function updateWelcomeText(username)
 {
     let txt = "Good Morning, " + username + ".";
     let date = new Date();
@@ -72,110 +75,66 @@ function update_username(username)
     document.getElementsByClassName("welcome")[0].innerHTML = txt;
 }
 
-function update_username_new_tab(autologin)
+function updateUsername(autologin)
 {
     let request = new XMLHttpRequest();
     request.open("GET", autologin,true);
     request.withCredentials = true;
     request.send();
-    let second = get_from_url("https://intra.epitech.eu/user/?format=json");
+    let second = getFromURL("https://intra.epitech.eu/user/?format=json");
     second.onreadystatechange = function() {
         if (second.readyState === 4) {
             let answer = JSON.parse(second.responseText);
             let item = answer["firstname"];
-            update_username(item);
+            updateWelcomeText(item);
         }
     };
     return ({});
 }
 
-function open_pexel() {
+function openPexelURL() {
     chrome.tabs.create({
         url: "https://www.pexels.com/"
     });
 }
 
-function draw_registered(registered, scolar_year) {
-    let table = document.getElementById("table_events");
-
-    table.deleteRow(0);
-    for (let i = 0; i < Object.keys(registered).length; i++) {
-        let module = registered[i];
-        let row = table.insertRow(0);
-        let cell = row.insertCell(0);
-        let title = module["acti_title"].split(" - ");
-        if (title[1])
-            cell.innerHTML = "<span style='color:#9b9b9b'> " + title[0] + " </span>" +  title[1] + " - ";
-        else
-            cell.innerHTML = "<span style='color:#9b9b9b'> " + title[0] + " </span> - ";
-        cell.innerHTML += "<span style='color:#9b9b9b'> " + format_room_code(module["room"]["code"]) + " </span>";
-        cell.innerHTML += " - " + time_of_module(module["start"]) + " to " + time_of_module(module["end"]).split(" ")[2];
-        cell.style.textShadow = "1px 1px black";
-        cell.style.textAlign = "center";
-        cell.classList.add("module");
-        cell.dataset.code = "https://intra.epitech.eu/module/" + scolar_year + "/" + module["codemodule"] + "/" + module["codeinstance"] + "/" + module["codeacti"] + "/";
-    }
-    if (Object.keys(registered).length === 0) {
-        let row = table.insertRow(0);
-        let cell = row.insertCell(0);
-        cell.innerHTML = "No events for the next 7 days.";
-        cell.style.textShadow = "1px 1px black";
-        cell.style.textAlign = "center";
-    }
+function openIntraEpitech() {
+    window.location = "https://intra.epitech.eu/";
 }
 
-function get_planning_new_tab(autologin)
+function retrievePlanningNewTab(autologin)
 {
-    let request = new XMLHttpRequest();
-    request.open("GET", autologin,true);
-    request.withCredentials = true;
-    request.send();
-    request.onreadystatechange = function() {
-        if (request.readyState === 4) {
-            let profile = get_from_url("https://intra.epitech.eu/user/?format=json");
-                profile.onreadystatechange = function () {
-                    if (profile.readyState === 4) {
-                        if (profile.status < 400) {
-                            profile = JSON.parse(profile.responseText);
-                            let second = get_from_url(get_url_of_week());
-                            second.onreadystatechange = function () {
-                                if (second.readyState === 4) {
-                                    let answer = JSON.parse(second.responseText);
-                                    if (answer.length > 0)
-                                        answer.sort(sort_planning);
-                                    $(".col-autologin").hide();
-                                    $(".autologin_help").hide();
-                                    $("#autologin_get").hide();
-                                    $("#events").show();
-                                    $(".welcome").show();
-                                    draw_registered(get_next_registered(get_registered_from_planning(answer)), profile["scolaryear"]);
-                                }
-                            };
-                        } else {
-                            $(".col-autologin").show();
-                            $(".autologin_help").show();
-                            $("#autologin_get").show();
-                            $("#events").hide();
-                            $(".welcome").hide();
-                    }
-                };
-            }
-        }
-    };
-    return ({});
+    getPlanning(autologin)
+    .then((answer) => {
+        $(".col-autologin").hide();
+        $("#events").show();
+        $(".welcome").show();
+        drawRegistered(document.getElementById("table_events"), getNextEventsByDays(getRegisteredFromPlanning(answer.data)), answer.scolarYear, 7);
+    })
+    .catch((error) => {
+        console.log(error);
+        $(".col-autologin").show();
+        $('.col-autologin').css({
+            "display": "flex",
+            "flex-direction": "column",
+            "align-items": "center"
+        });
+        $("#events").hide();
+        $(".welcome").hide();
+    });
 }
 
-function get_autologin_link()
+function trySyncAutologin()
 {
-    let profile = get_from_url("https://intra.epitech.eu/admin/autolog?format=json");
-    profile.onreadystatechange = function () {
+    let profile = getFromURL("https://intra.epitech.eu/admin/autolog?format=json");
+    profile.onreadystatechange = () => {
         if (profile.status < 400) {
             let request = JSON.parse(profile.responseText);
             $(".autologin_help").text("Success! Just wait while we synchronize your calendar.");
             if (request["autologin"]) {
                 chrome.storage.sync.set({autologin: request["autologin"]});
                 chrome.storage.sync.get(["autologin"], function (res) {
-                    get_planning_new_tab(res.autologin);
+                    retrievePlanningNewTab(res.autologin);
                 });
             }
         } else {
@@ -184,9 +143,6 @@ function get_autologin_link()
     };
 }
 
-update_photo();
-document.getElementById("pexel_logo").addEventListener("click", open_pexel);
-
 document.addEventListener("click", function(e) {
     if (!e.target["classList"].contains("intranet") && !e.target["classList"].contains("module")) {
         return;
@@ -194,28 +150,53 @@ document.addEventListener("click", function(e) {
     if (e.target["classList"].contains("intranet"))
         open_planning();
     else if (e.target["classList"].contains("module"))
-        show_event(e.target || e.srcElement);
+        showEvent(e.target || e.srcElement);
 });
 
-$(document).ready(function() {
-    start_clock();
-    let row = document.getElementById("table_events").insertRow(0);
-    let cell = row.insertCell(0);
+function fadeElements()
+{
+    $("#events").fadeIn(2000);
+    $("#time").fadeIn(2000);
+    $(".welcome").fadeIn(2000);
+    $(".searchbox-container").fadeIn(2000);
+}
+
+function updateWelcome()
+{
     let found = false;
-    cell.style.textAlign = "center";
-    cell.innerHTML = "We're trying to recover your schedule..";
+
     chrome.storage.sync.get(["username"], function (res) {
         if (res.username) {
             found = true;
-            update_username(res.username);
+            updateWelcomeText(res.username);
         }
     });
     chrome.storage.sync.get(["autologin"], function (res) {
         if (!found)
-            update_username_new_tab(res.autologin);
-        get_planning_new_tab(res.autologin);
+            updateUsername(res.autologin);
+        retrievePlanningNewTab(res.autologin);
     });
-    document.getElementById("autologin_get").addEventListener("click", get_autologin_link);
-    $("#events").fadeIn(2000);
-    $(".welcome").fadeIn(2000);
+    document.getElementById("autologin_get").addEventListener("click", trySyncAutologin);
+}
+
+$(document).ready(function() {
+    startClock();
+    updateWelcome();
+    let row = document.getElementById("table_events").insertRow(0);
+    let cell = row.insertCell(0);
+    cell.style.textAlign = "center";
+    cell.innerHTML = "We're trying to recover your schedule..";
+
+    updateBackground();
+    fadeElements();
+    document.getElementById("pexel_logo").addEventListener("click", openPexelURL);
+    document.getElementsByClassName("search-input")[0].addEventListener("keydown", (event) => {
+        if (event.keyCode != 13)
+            return;
+        launchSearch();
+        event.preventDefault();
+    });
+    $('.search-input').focus();
+    $(".search-go").click(launchSearch);
+    $(".gotoIntra").click(openIntraEpitech);
 });

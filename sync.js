@@ -1,6 +1,7 @@
 let planningNotification = "planning-notification";
+let notifyMinutes = 15;
 
-function get_from_url(url){
+function getFromURL(url){
     let request = new XMLHttpRequest();
     request.open("GET", url,true);
     request.send(null);
@@ -8,15 +9,21 @@ function get_from_url(url){
     return request;
 }
 
-function days_in_month(month, year) {
+function updateNotifyMinutes(minutes) {
+    if (Number(minutes) == "NaN")
+        return;
+    notifyMinutes = Number(minutes);
+}
+
+function daysInMonth(month, year) {
     return new Date(year, month + 1, 0).getDate();
 }
 
-function get_url_of_week() {
+function getWeekURL() {
     let actual = new Date();
     let actual_str = actual.getFullYear() + "-" + (actual.getMonth() + 1) + "-" + actual.getDate();
     let next = new Date(actual.setDate(actual.getDate() + 7));
-    let days_month = days_in_month(actual.getMonth(), actual.getFullYear());
+    let days_month = daysInMonth(actual.getMonth(), actual.getFullYear());
     let next_str;
     if (next.getDate() > days_month) {
         next = new Date(actual.setMonth(actual.getMonth() + 1));
@@ -27,22 +34,88 @@ function get_url_of_week() {
     return ("https://intra.epitech.eu/planning/load?format=json&start="+actual_str+"&end="+next_str);
 }
 
-function get_planning(autologin)
+function updatePlanning(autologin)
 {
     let request = new XMLHttpRequest();
     request.open("GET", autologin,true);
     request.withCredentials = true;
     request.send();
-    let second = get_from_url(get_url_of_week());
+    let second = getFromURL(getWeekURL());
     second.onreadystatechange = function() {
         if (second.readyState === 4) {
             let answer = JSON.parse(second.responseText);
-            check_notifications(get_registered_from_planning(answer));
+            checkNotifications(getRegisteredFromPlanning(answer));
         }
     };
 }
 
-function get_registered_from_planning(planning)
+function getPlanning(autologin)
+{
+    let request = new XMLHttpRequest();
+    let promise = new Promise((resolve, reject) => {
+        request.open("GET", autologin,true);
+        request.withCredentials = true;
+        request.send();
+        request.onreadystatechange = () => {
+            if (request.readyState === 4) {
+                let profile = getFromURL("https://intra.epitech.eu/user/?format=json");
+                profile.onreadystatechange = () => {
+                    if (profile.readyState === 4) {
+                        if (profile.status < 400) {
+                            profile = JSON.parse(profile.responseText);
+                            let second = getFromURL(getWeekURL());
+                            second.onreadystatechange = () => {
+                                if (second.readyState === 4) {
+                                    let answer = JSON.parse(second.responseText);
+                                    if (answer.length > 0)
+                                        answer.sort(sortPlanning);
+                                    resolve({data: answer, scolarYear: profile["scolaryear"]});
+                                }
+                            };
+                        } else {
+                            reject(Error("Can't retrieve planning, are you logged on intra.epitech.eu ?"));
+                        }
+                    };
+                }
+            }
+        };
+    });
+
+    return (promise);
+}
+
+function drawRegistered(table, registered, scolar_year, days) {
+    table.deleteRow(0);
+    for (let i = 0; i < Object.keys(registered).length; i++) {
+        let module = registered[i];
+        let row = table.insertRow(0);
+        let cell = row.insertCell(0);
+        let title = module["acti_title"].split(" - ");
+        let titleElem = document.createElement("span");
+        titleElem.style.color = "#9b9b9b";
+        if (title[1])
+            titleElem.innerHTML = title[0] + " " +  title[1];
+        else
+            titleElem.innerHTML = title[0];
+        titleElem.style.pointerEvents = "none";
+        cell.appendChild(titleElem);
+        cell.innerHTML += " - <span style='color:#9b9b9b; pointer-events: none'> " + formatRoomCode(module["room"]["code"]) + " </span>";
+        cell.innerHTML += " - " + getModuleTime(module["start"]) + " to " + getModuleTime(module["end"]).split(" ")[2];
+        cell.style.textShadow = "1px 1px black";
+        cell.style.textAlign = "center";
+        cell.classList.add("module");
+        cell.dataset.code = "https://intra.epitech.eu/module/" + scolar_year + "/" + module["codemodule"] + "/" + module["codeinstance"] + "/" + module["codeacti"] + "/";
+    }
+    if (Object.keys(registered).length === 0) {
+        let row = table.insertRow(0);
+        let cell = row.insertCell(0);
+        cell.innerHTML = "No events for the next " + (days == 1 ? "24 hours." : days + " days.");
+        cell.style.textShadow = "1px 1px black";
+        cell.style.textAlign = "center";
+    }
+}
+
+function getRegisteredFromPlanning(planning)
 {
     let registered = {};
     let index = 0;
@@ -56,12 +129,12 @@ function get_registered_from_planning(planning)
     return (registered);
 }
 
-function sort_planning(a, b)
+function sortPlanning(a, b)
 {
     return new Date(b["start"]).getTime() - new Date(a["start"]).getTime();
 }
 
-function get_next_registered(planning, days)
+function getNextEventsByDays(planning, days)
 {
     let date = new Date();
     let comming = {};
@@ -73,7 +146,7 @@ function get_next_registered(planning, days)
         let module_time = module.split(" ")[1].split(":");
         if (parseInt(module_date[1]) === date.getMonth() + 2) {
             if (days) {
-                let days_month = days_in_month(date.getMonth(), date.getFullYear());
+                let days_month = daysInMonth(date.getMonth(), date.getFullYear());
                 if ((days_month - date.getDate()) + parseInt(module_date[2]) <= days)
                     comming[index++] = planning[i];
             } else
@@ -97,15 +170,15 @@ function get_next_registered(planning, days)
     return (comming);
 }
 
-function format_room_code(room_code)
+function formatRoomCode(room_code)
 {
-    if (!room_code)
+    if (!room_code || room_code.length == 0)
         return ("No room assigned");
     let splitted = room_code.split("/");
     return (splitted[splitted.length - 1]);
 }
 
-function time_of_module(module)
+function getModuleTime(module)
 {
     let end_string = "";
     let date = new Date();
@@ -114,7 +187,7 @@ function time_of_module(module)
 
     let days = parseInt(module_date[2]) - date.getDate();
     if (parseInt(module_date[1]) === date.getMonth() + 2) {
-        let days_month = days_in_month(date.getMonth(), date.getFullYear());
+        let days_month = daysInMonth(date.getMonth(), date.getFullYear());
         days = (days_month - date.getDate()) + parseInt(module_date[2]);
     }
     if (days === 0) {
@@ -128,19 +201,24 @@ function time_of_module(module)
     return (end_string);
 }
 
-function show_event(element) {
-    chrome.tabs.create({
-        url: element.dataset.code
+function showEvent(element) {
+    chrome.storage.sync.get("openEventNewTab", (res) => {
+        if (res.openEventNewTab) {
+            chrome.tabs.create({
+                url: element.dataset.code
+            });
+        } else
+            window.location = element.dataset.code;
     });
 }
 
-function check_notifications(events)
+function checkNotifications(events)
 {
-    notify_events(events);
-    setTimeout(check_notifications, 60 * 2000, events);
+    notifyEvents(events);
+    setTimeout(checkNotifications, 60 * 2000, events);
 }
 
-function notify_events(event) {
+function notifyEvents(event) {
     for (let i = 0; i < Object.keys(event).length; i++) {
         let date = new Date();
         let time = event[i]["start"];
@@ -149,12 +227,12 @@ function notify_events(event) {
         if (parseInt(module_date[2]) - date.getDate() === 0) {
             if (parseInt(module_time[0] - 1) === date.getHours()) {
                 let time = 60 + parseInt((module_time[1])) - date.getMinutes();
-                if (time <= 15) {
+                if (time <= notifyMinutes) {
                     chrome.notifications.create(planningNotification, {
                         "type": "basic",
                         "iconUrl": chrome.extension.getURL("icons/icon-64.png"),
                         "title": event[i]["acti_title"],
-                        "message": "Starts in " + (time).toString() + " minutes in " + format_room_code(event[i]["room"]["code"])
+                        "message": "Starts in " + (time).toString() + " minutes in " + formatRoomCode(event[i]["room"]["code"])
                     });
                 }
             }
@@ -163,5 +241,5 @@ function notify_events(event) {
 }
 
 chrome.storage.sync.get(["autologin"], function (res) {
-    get_planning(res.autologin);
+    updatePlanning(res.autologin);
 });

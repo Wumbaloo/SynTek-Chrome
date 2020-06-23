@@ -8,13 +8,19 @@ html, body {
     overflow: hidden;
 }
 
+body {
+    background-size: 100%;
+    background-image: url(../images/black.png);
+    transition: background 0.5s linear;
+}
+
 .centered {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 100vh;
+    min-height: 80vh;
     position: absolute;
     width: 100%;
     font-family: "Nimbus Sans", sans-serif;
@@ -60,35 +66,30 @@ html, body {
     cursor: pointer;
 }
 
-tr {
-
-}
 tr:nth-child(even) {
     background-color: rgba(0, 167, 228, 0.3);
     color: #FFFFFF;
 }
 
 .col-autologin {
-    top: -50px;
-    margin: 40px 3%;
-    width: 40%;
-    height: 60px;
+    margin-top: 2rem;
     border-radius: 10px;
     position: relative;
 }
 
 #autologin {
-    font: 40px "Nimbus Sans", "Lato", Arial, sans-serif;
+    font: 20px "Nimbus Sans", "Lato", Arial, sans-serif;
     color: #FFFFFF;
     width: 100%;
-    height: 60px;
+    height: 40px;
     border-radius: 10px;
     box-sizing: border-box;
     letter-spacing: 1px;
-    position: absolute;
-    padding-top: 10px;
-    transform: translateX(-50%);
     background: rgba(51, 51, 51, 0.7);
+}
+
+#autologin input:focus {
+    outline: none;
 }
 
 .autologin-effect {
@@ -98,62 +99,145 @@ tr:nth-child(even) {
     transition: 0.4s;
 }
 
-.autologin-effect ~ .focus-border:before,
-.autologin-effect ~ .focus-border:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #2E3261;
-    transition: 0.3s;
-}
-.autologin-effect ~ .focus-border:after {
-    top: auto;
-    bottom: 0;
-    left: auto;
-    right: 0;
-}
-.autologin-effect ~ .focus-border i:before,
-.autologin-effect ~ .focus-border i:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 0;
-    background-color: #2E3261;
-    transition: 0.4s;
-}
-.autologin-effect ~ .focus-border i:after {
-    left: auto;
-    right: 0;
-    top: auto;
-    bottom: 0;
-}
-.autologin-effect:focus ~ .focus-border:before,
-.autologin-effect:focus ~ .focus-border:after {
-    width: 100%;
-    transition: 0.3s;
-}
-.autologin-effect:focus ~ .focus-border i:before,
-.autologin-effect:focus ~ .focus-border i:after {
-    height: 100%;
-    transition: 0.4s;
-}
-
 #autologin_get {
-    width: 20%;
     height: 50px;
     position: relative;
-    bottom: 50px;
     border-radius: 20px;
 }
 
 .autologin_help {
     font-size: 20px;
     font-weight: 100;
-    position: absolute;
-    margin-top: 50px;
+}
+
+.searchbox-container {
+    margin-top: 2rem;
+    justify-content: left;
+}
+
+.searchbox-container img {
+    height: 1.5rem;
+}
+
+.searchbox {
+    display: flex;
+    padding-left: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 22px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background: white;
+    width: 30rem;
+    height: 2.5rem;
+    border: 2px solid rgb(118, 118, 118);
+}
+
+.searchbox input {
+    padding-top: 2px;
+    border: none;
+    height: 100%;
+    width: 90%;
+    font-size: 16px;
+    cursor: text;
+    background: transparent;
+}
+
+.searchbox input:focus {
+    outline: none;
+}
+
+.search-go {
+    border-radius: 50%;
+    width: 10%;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings {
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.toggler {
+    cursor: pointer;
+}
+
+.drawer {
+    height: 100%;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    background-color: rgba(51, 51, 51, 0.7);
+    overflow-x: hidden;
+    color: white;
+    transition: 0.5s;
+}
+
+.drawer .container {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer .toggler {
+    align-self: flex-end;
+    font-size: 20px;
+}
+
+.beforeTimer-container {
+    margin-top: 8px;
+}
+
+.mdl-button-color-1 {
+    background: #3f51b5 !important;
+    color: #FFFFFF !important;
+}
+
+.mdl-button-color-2 {
+    background: #ff4081 !important;
+    color: #FFFFFF !important;
+}
+
+.mdl-button {
+    background: 0 0;
+    border: none;
+    border-radius: 2px;
+    color: white;
+    position: relative;
+    height: 36px;
+    margin: auto;
+    margin-bottom: 8px;
+    min-width: 64px;
+    padding: 0 16px;
+    display: inline-block;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    overflow: hidden;
+    will-change: box-shadow;
+    transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1);
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 36px;
+    vertical-align: middle;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.bottom-settings-close {
+    align-self: center !important;
+    left: 0;
+    margin-top: 3rem;
+}
+
+.gotoIntra {
+    cursor: pointer;
 }
