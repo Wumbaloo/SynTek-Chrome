@@ -2,11 +2,11 @@
   "author": "William GAUDFRIN",
   "manifest_version": 2,
   "name": "SynTek",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Check your Epitech Planning from anywhere and be warned!",
 
   "background": {
-    "scripts": ["sync.js", "hot-reload.js"]
+    "scripts": ["sync.js"]
   },
 
   "icons": {
