@@ -157,6 +157,8 @@ function fadeElements()
 {
     $("#events").fadeIn(2000);
     $("#time").fadeIn(2000);
+    $(".gotoIntra").fadeIn(2000);
+    $(".toggler").fadeIn(2000);
     $(".welcome").fadeIn(2000);
     $(".searchbox-container").fadeIn(2000);
 }

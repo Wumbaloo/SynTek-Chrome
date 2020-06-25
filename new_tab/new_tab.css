@@ -39,10 +39,7 @@ body {
 
 #pexel_logo {
     cursor: pointer;
-    position: absolute;
-    transform: scale(0.2);
-    top: 88%;
-    left: 74.7%;
+    width: 10rem;
 }
 
 #events {
@@ -240,4 +237,61 @@ tr:nth-child(even) {
 
 .gotoIntra {
     cursor: pointer;
+}
+
+.bottom {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.shortcuts {
+    display: flex;
+}
+
+.shortcuts a:not(:first-child) {
+    margin-left: 14px;
+}
+
+.gmail {
+    background-image: url(https://ssl.gstatic.com/gb/images/p1_6269e604.png);
+    background-size: 64px 2824px;
+    background-position: 0 -483px;
+    height: 62px;
+    width: 64px;
+}
+
+.settings-text {
+    text-align: center;
+    color: white;
+    width: 62px;
+    mix-blend-mode: difference;
+}
+
+.drive {
+    background-image: url(https://ssl.gstatic.com/gb/images/p1_6269e604.png);
+    background-size: 64px 2824px;
+    background-position: 0 -2277px;
+    height: 62px;
+    width: 64px;
+}
+
+.calendar {
+    background-image: url(https://ssl.gstatic.com/gb/images/p1_6269e604.png);
+    background-size: 64px 2824px;
+    background-position: 0 -2553px;
+    height: 62px;
+    width: 64px;
+}
+
+.youtube {
+    background-image: url(https://ssl.gstatic.com/gb/images/p1_6269e604.png);
+    background-size: 64px 2824px;
+    background-position: 0 -1311px;
+    height: 62px;
+    width: 64px;
 }

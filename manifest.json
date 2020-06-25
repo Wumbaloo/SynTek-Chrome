@@ -6,7 +6,7 @@
   "description": "Check your Epitech Planning from anywhere and be warned!",
 
   "background": {
-    "scripts": ["sync.js"]
+    "scripts": ["sync.js", "hot-reload.js"]
   },
 
   "icons": {
